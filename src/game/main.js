@@ -1,21 +1,16 @@
+function createAsteroids() {
 
-function createAsteroids () {
     for (var y = 0; y < 2; y++){
         for (var x = 0; x < 4; x++){
-            var asteroid = asteroids.create(x * 200, y * 200, 'asteroid');
-            asteroid.anchor.setTo(0.5, 0.5);
-            asteroid.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
-            asteroid.play('fly');
-            game.physics.arcade.enable([asteroid], Phaser.Physics.ARCADE)
-            asteroid.body.moves = false;
+            const enemy = new Enemy(game, x * 200, y * 200, 'asteroid')
+            asteroids.add(enemy)
         }
     }
-    asteroids.x = 100;
-    asteroids.y = 100;
-//to(properties, duration, ease, autoStart, delay, repeat, yoyo)
+
     var tween = game.add.tween(asteroids).to( { x: 170 }, 1000, Phaser.Easing.Circular.easeInOut, true, 0, 5000, true);
     tween.onLoop.add(move_down, this);
 }
+
 function move_down() {
     asteroids.y += 1;
 }
@@ -54,15 +49,12 @@ const state = {
   },
   create: function() {
 
-    asteroids = game.add.group();
-    asteroids.enableBody = true;
-    asteroids.physicsBodyType = Phaser.Physics.ARCADE;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.enable(true)
 
     asteroids = game.add.group()
-    asteroids.enableBody = true
-    asteroids.physicsBodyType = Phaser.Physics.ARCADE
+    // asteroids.enableBody = true
+    // asteroids.physicsBodyType = Phaser.Physics.ARCADE
     
     bullets = game.add.group()
 
@@ -105,12 +97,6 @@ const state = {
     // alert(asteroids.countLiving())
 
 
-    var explosion = explosions.getFirstExists(false);
-    explosion.reset(50, 50);
-    explosion.play('kaboom', 100, false, true);
-
-
-
     // controls
     if (cursors.left.isDown) {
       game.ship.body.velocity.x = -SPEED
@@ -142,6 +128,8 @@ const state = {
     asteroids.forEach((b) => {
      game.debug.body(b)
     })
+    game.debug.body(asteroids)
+
   }
 }
 

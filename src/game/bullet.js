@@ -13,6 +13,10 @@ class Bullet extends Phaser.Sprite {
   }
   onHitAsteroid(bullet, asteroid) {
 
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(asteroid.body.x, asteroid.body.y);
+    explosion.play('kaboom', 20, false, true);
+
     asteroids.remove(asteroid)
     asteroid.kill()
 
