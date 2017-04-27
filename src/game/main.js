@@ -1,8 +1,8 @@
 
 function createAsteroids () {
-    for (var y = 0; y < 4; y++){
-        for (var x = 0; x < 10; x++){
-            var asteroid = asteroids.create(x * 48, y * 50, 'asteroid');
+    for (var y = 0; y < 2; y++){
+        for (var x = 0; x < 4; x++){
+            var asteroid = asteroids.create(x * 200, y * 200, 'asteroid');
             asteroid.anchor.setTo(0.5, 0.5);
             asteroid.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
             asteroid.play('fly');
@@ -11,7 +11,13 @@ function createAsteroids () {
         }
     }
     asteroids.x = 100;
-    asteroids.y = 50;
+    asteroids.y = 100;
+//to(properties, duration, ease, autoStart, delay, repeat, yoyo)
+    var tween = game.add.tween(asteroids).to( { x: 170 }, 1000, Phaser.Easing.Circular.easeInOut, true, 0, 5000, true);
+    tween.onLoop.add(move_down, this);
+}
+function move_down() {
+    asteroids.y += 1;
 }
 
 const state = {
@@ -21,7 +27,7 @@ const state = {
   preload: function() {
     game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT
     game.load.image('ship', 'img/ship.gif')
-    game.load.image('asteroid', 'asteroid-icon.png')
+    game.load.image('asteroid', 'giphy-2.gif')
   },
   create: function() {
 
@@ -56,7 +62,7 @@ const state = {
   update: function() {
     const cursors = game.input.keyboard.createCursorKeys()
     const SPEED = 800
-
+    
     // controls
     if (cursors.left.isDown) {
       game.ship.body.velocity.x = -SPEED
