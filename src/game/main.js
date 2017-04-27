@@ -1,38 +1,56 @@
-/**
- *
- * This is a simple state template to use for getting a Phaser game up
- * and running quickly. Simply add your own game logic to the default
- * state object or delete it and make your own.
- *
- */
+const state = {
+  init: function() {
 
-var state = {
-    init: function() {
-        // Delete this init block or replace with your own logic.
+  },
+  preload: function() {
+    game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT
+    game.load.image('ship', 'img/ship.gif')
+  },
+  create: function() {
 
-        // Create simple text display for current Phaser version
-        var text = "Phaser Version "+Phaser.VERSION + " works!";
-        var style = { font: "24px Arial", fill: "#fff", align: "center" };
-        var t = game.add.text(this.world.centerX, this.world.centerY, text, style);
-        t.anchor.setTo(0.5, 0.5);
+    // create spaceship
+    const x = this.world.centerX
+    const y = this.world.height - 100
+    const ship = game.add.sprite(x, y, 'ship')
 
-    },
-    preload: function() {
-        // STate preload logic goes here
-    },
-    create: function(){
-      // State create logic goes here
-    },
-    update: function() {
-        // State Update Logic goes here.
+    ship.anchor.setTo(0.5, 0.5)
+    //ship.angle += 180
+    
+    game.ship = ship
+
+    // define world boundaries
+    game.world.setBounds(0, 0, this.world.width, this.world.height)
+
+    // enable physics
+    game.physics.arcade.enable([ship], Phaser.Physics.ARCADE)
+
+    // "body" only exists after you enable physics
+    ship.body.collideWorldBounds = true
+
+  },
+  update: function() {
+    const cursors = game.input.keyboard.createCursorKeys()
+    const SPEED = 800
+
+    // controls
+    if (cursors.left.isDown) {
+      game.ship.body.velocity.x = -SPEED
     }
-};
+    if (cursors.right.isDown) {
+      game.ship.body.velocity.x = SPEED
+    }
 
-var game = new Phaser.Game(
-    800,
-    480,
-    Phaser.AUTO,
-    'game',
-    state
-);
+    // slow down gradually
+    game.ship.body.velocity.x /= 1.1
+  }
+}
+
+// hacky version of fullscreen
+const game = new Phaser.Game(
+  800,
+  640,
+  Phaser.AUTO,
+  'game',
+  state
+)
 
