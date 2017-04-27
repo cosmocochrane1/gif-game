@@ -15,7 +15,7 @@ class Bullet extends Phaser.Sprite {
 
     var explosion = explosions.getFirstExists(false);
     explosion.reset(asteroid.body.x, asteroid.body.y);
-    explosion.play('kaboom', 20, false, true);
+    explosion.play('kaboom', 10, false, true);
 
     asteroids.remove(asteroid)
     asteroid.kill()

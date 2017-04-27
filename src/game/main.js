@@ -41,7 +41,7 @@ const state = {
     game.load.image('ship', 'img/ship.gif')
     game.load.image('asteroid', 'giphy-2.gif')
 
-    game.load.spritesheet('kaboom', 'sample.jpg', 500, 400);
+    game.load.spritesheet('kaboom', 'sample.jpg', 64, 64);
 
     var explosions;
     game.load.image('bullet', 'img/bullet.png')
@@ -63,7 +63,7 @@ const state = {
 
     //  An explosion pool
     explosions = game.add.group();
-    explosions.createMultiple(300, 'kaboom');
+    explosions.createMultiple(100, 'kaboom');
     explosions.forEach(setupInvader, this);
 
     // create spaceship
