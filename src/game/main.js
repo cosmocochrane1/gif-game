@@ -1,19 +1,37 @@
-function createAsteroids() {
 
-    for (var y = 0; y < 2; y++){
-        for (var x = 0; x < 4; x++){
-            const enemy = new Enemy(game, x * 200, y * 200, 'asteroid')
+function createAsteroids() {
+    const s = 80
+    for (var y = 0; y < 4; y++){
+        for (var x = 0; x < 8; x++){
+            const enemy = new Enemy(game, x * s, y * s, 'asteroid')
             asteroids.add(enemy)
         }
     }
-
-    var tween = game.add.tween(asteroids).to( { x: 170 }, 1000, Phaser.Easing.Circular.easeInOut, true, 0, 5000, true);
-    tween.onLoop.add(move_down, this);
 }
 
-function move_down() {
-    asteroids.y += 1;
+
+let dir = 1
+function updateAsteroids() {
+  const s = 48
+  let changed = false
+  asteroids.forEach(function(asteroid) {
+    if (asteroid.x <= 0) {
+      dir = 1
+      changed = true
+    }
+    if (asteroid.x >= (game.world.width)) {
+      dir = -1
+      changed = true
+    }
+  })
+  asteroids.forEach(function(asteroid) {
+    asteroid.x += dir * 4
+    if (changed) {
+      asteroid.y += s
+    }
+  })
 }
+
 function update_score(){
     if(asteroids.countLiving() <= currentCountLiving){
         currentScore += 1;
@@ -68,11 +86,13 @@ const state = {
 
     // create spaceship
     const x = this.world.centerX
-    const y = this.world.height - 100
+    const y = this.world.height - 50
     const ship = game.add.sprite(x, y, 'ship')
-
-
+    game.physics.arcade.enable([ship], Phaser.Physics.ARCADE)
     ship.anchor.setTo(0.5, 0.5)
+    ship.scale.setTo(0.4, 0.4)
+
+    //ship.body.scale.setTo(1,1)
     //ship.angle += 180
     
     game.ship = ship
@@ -81,7 +101,6 @@ const state = {
     game.world.setBounds(0, 0, this.world.width, this.world.height)
 
     // enable physics
-    game.physics.arcade.enable([ship], Phaser.Physics.ARCADE)
 
     game.physics.arcade.collide(ship, asteroids)
 
@@ -109,26 +128,27 @@ const state = {
       if (game.time.now > cooldown) {
         // create a new bullet
         const x = game.ship.x
-        const y = game.ship.y
+        const y = game.ship.y - 16
         const bullet = new Bullet(game, x, y, 'bullet')
         game.add.existing(bullet)
         // add to bullet group
         bullets.add(bullet)
         // schedule the next cooldown
-        cooldown = game.time.now + 150
+        cooldown = game.time.now + 250
       }
     }
     // slow down gradually
     game.ship.body.velocity.x /= 2
+    updateAsteroids()
   },
   render: function() {
-    bullets.forEach((b) => {
-     game.debug.body(b)
-    })
-    asteroids.forEach((b) => {
-     game.debug.body(b)
-    })
-    game.debug.body(asteroids)
+    //bullets.forEach((b) => {
+    // game.debug.body(b)
+    //})
+    //asteroids.forEach((b) => {
+    // game.debug.body(b)
+    //})
+    //game.debug.body(asteroids)
 
   }
 }

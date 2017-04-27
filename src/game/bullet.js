@@ -6,9 +6,9 @@ class Bullet extends Phaser.Sprite {
     game.physics.arcade.enable([this], Phaser.Physics.ARCADE)
 
     // make bullets smaller
-    this.scale.setTo(0.1, 0.1)
+    this.scale.setTo(0.05, 0.05)
     // bullets are always moving up
-    this.body.velocity.y = -500
+    this.body.velocity.y = -1000
     this.body.collideWorldBounds = true
   }
   onHitAsteroid(bullet, asteroid) {
@@ -16,6 +16,8 @@ class Bullet extends Phaser.Sprite {
     var explosion = explosions.getFirstExists(false);
     explosion.reset(asteroid.body.x, asteroid.body.y);
     explosion.play('kaboom', 20, false, true);
+    explosion.anchor.setTo(0.5, 0.5)
+    explosion.scale.setTo(0.25, 0.25)
 
     asteroids.remove(asteroid)
     asteroid.kill()

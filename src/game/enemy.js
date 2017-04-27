@@ -1,18 +1,19 @@
 class Enemy extends Phaser.Sprite {
+  constructor (game, x, y, key) {
 
-	constructor (game, x, y, key) {
-	    super(game, x, y, key)
+      super(game, x, y, key)
 
-	    game.physics.arcade.enable([this], Phaser.Physics.ARCADE)
+      game.physics.arcade.enable([this], Phaser.Physics.ARCADE)
 
-        this.anchor.setTo(0.5, 0.5);
+      this.anchor.setTo(0.5, 0.5);
 
-        this.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
+      this.scale.setTo(0.3, 0.3)
 
-        this.play('fly');
+      this.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
 
-        this.body.moves = false;
+      this.play('fly');
 
-	}
+      this.body.moves = false;
 
+  }
 }
