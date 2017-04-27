@@ -19,15 +19,33 @@ function createAsteroids () {
 function move_down() {
     asteroids.y += 1;
 }
+function update_score(){
+    if(asteroids.countLiving() <= currentCountLiving){
+        currentScore += 1;
+        currentCountLiving -= 1;
+        console.log(currentScore);
+        console.log(currentCountLiving);
+    }
+}
+
+function setupInvader (invader) {
+    invader.anchor.x = 0;
+    invader.anchor.y = 0;
+    invader.animations.add('kaboom');
+}
 
 const state = {
   init: function() {
-
   },
   preload: function() {
     game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT
     game.load.image('ship', 'img/ship.gif')
     game.load.image('asteroid', 'giphy-2.gif')
+
+    game.load.spritesheet('kaboom', 'sample.jpg', 500, 400);
+
+    var explosions;
+
   },
   create: function() {
 
@@ -35,6 +53,11 @@ const state = {
     asteroids.enableBody = true;
     asteroids.physicsBodyType = Phaser.Physics.ARCADE;
 
+
+    //  An explosion pool
+    explosions = game.add.group();
+    explosions.createMultiple(300, 'kaboom');
+    explosions.forEach(setupInvader, this);
 
     // create spaceship
     const x = this.world.centerX
@@ -62,7 +85,16 @@ const state = {
   update: function() {
     const cursors = game.input.keyboard.createCursorKeys()
     const SPEED = 800
-    
+
+    // alert(asteroids.countLiving())
+
+
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(50, 50);
+    explosion.play('kaboom', 100, false, true);
+    console.log('yeww');
+
+
     // controls
     if (cursors.left.isDown) {
       game.ship.body.velocity.x = -SPEED
