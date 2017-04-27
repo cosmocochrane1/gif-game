@@ -1,3 +1,19 @@
+
+function createAsteroids () {
+    for (var y = 0; y < 4; y++){
+        for (var x = 0; x < 10; x++){
+            var asteroid = asteroids.create(x * 48, y * 50, 'asteroid');
+            asteroid.anchor.setTo(0.5, 0.5);
+            asteroid.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
+            asteroid.play('fly');
+            game.physics.arcade.enable([asteroid], Phaser.Physics.ARCADE)
+            asteroid.body.moves = false;
+        }
+    }
+    asteroids.x = 100;
+    asteroids.y = 50;
+}
+
 const state = {
   init: function() {
 
@@ -5,8 +21,14 @@ const state = {
   preload: function() {
     game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT
     game.load.image('ship', 'img/ship.gif')
+    game.load.image('asteroid', 'asteroid-icon.png')
   },
   create: function() {
+
+    asteroids = game.add.group();
+    asteroids.enableBody = true;
+    asteroids.physicsBodyType = Phaser.Physics.ARCADE;
+
 
     // create spaceship
     const x = this.world.centerX
@@ -23,6 +45,9 @@ const state = {
 
     // enable physics
     game.physics.arcade.enable([ship], Phaser.Physics.ARCADE)
+
+    // asteroid = game.add.sprite(0,0, 'asteroid');
+    createAsteroids()
 
     // "body" only exists after you enable physics
     ship.body.collideWorldBounds = true
@@ -45,7 +70,6 @@ const state = {
   }
 }
 
-// hacky version of fullscreen
 const game = new Phaser.Game(
   800,
   640,
@@ -53,4 +77,3 @@ const game = new Phaser.Game(
   'game',
   state
 )
-
