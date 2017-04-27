@@ -2,21 +2,20 @@
 function createAsteroids () {
     for (var y = 0; y < 4; y++){
         for (var x = 0; x < 10; x++){
-            var asteroid = asteroids.create(x * 48, y * 50, 'asteroid');
-            asteroid.anchor.setTo(0.5, 0.5);
-            asteroid.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
-            asteroid.play('fly');
+            var asteroid = asteroids.create(x * 48, y * 50, 'asteroid')
+            asteroid.anchor.setTo(0.5, 0.5)
+            asteroid.animations.add('fly', [ 0, 1, 2, 3 ], 20, true)
+            asteroid.play('fly')
             game.physics.arcade.enable([asteroid], Phaser.Physics.ARCADE)
-            asteroid.body.moves = false;
+            asteroid.body.moves = false
         }
     }
-    asteroids.x = 100;
-    asteroids.y = 50;
+    asteroids.x = 100
+    asteroids.y = 50
 }
 
 const state = {
-  init: function() {
-
+  init: function() { 
   },
   preload: function() {
     game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT
@@ -26,9 +25,9 @@ const state = {
   },
   create: function() {
 
-    asteroids = game.add.group();
-    asteroids.enableBody = true;
-    asteroids.physicsBodyType = Phaser.Physics.ARCADE;
+    asteroids = game.add.group()
+    asteroids.enableBody = true
+    asteroids.physicsBodyType = Phaser.Physics.ARCADE
 
 
     // create spaceship
@@ -50,7 +49,9 @@ const state = {
     // enable physics
     game.physics.arcade.enable([ship], Phaser.Physics.ARCADE)
 
-    // asteroid = game.add.sprite(0,0, 'asteroid');
+    game.physics.arcade.collide(ship, asteroids)
+
+    // asteroid = game.add.sprite(0,0, 'asteroid')
     createAsteroids()
 
     // "body" only exists after you enable physics
