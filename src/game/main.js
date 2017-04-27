@@ -22,6 +22,7 @@ const state = {
     game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT
     game.load.image('ship', 'img/ship.gif')
     game.load.image('asteroid', 'asteroid-icon.png')
+    game.load.image('bullet', 'img/ship.gif')
   },
   create: function() {
 
@@ -34,6 +35,9 @@ const state = {
     const x = this.world.centerX
     const y = this.world.height - 100
     const ship = game.add.sprite(x, y, 'ship')
+    const b = new Bullet(game, 0, 0, 'bullet')
+    const bullet = game.add.existing(b)
+
 
     ship.anchor.setTo(0.5, 0.5)
     //ship.angle += 180
