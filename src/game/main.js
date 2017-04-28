@@ -100,6 +100,8 @@ const state = {
     game.load.audio('pew1', "pew1.wav");
     game.load.audio('pew2', "pew2.wav");
     game.load.audio('boom', "boom.wav");
+    game.load.audio('boom2', "boom2.wav");
+    game.load.audio('boom3', "boom3.wav");
 
 		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 

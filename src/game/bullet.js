@@ -41,8 +41,9 @@ class Bullet extends Phaser.Sprite {
     asteroids.remove(asteroid)
     asteroid.kill();
     update_score();
-    const boom = game.add.audio('boom');
-    boom.play()
+
+    game.add.audio('boom').play()
+    game.add.audio('boom2').play()
 
 		bullets.remove(bullet)
 		bullet.kill()
