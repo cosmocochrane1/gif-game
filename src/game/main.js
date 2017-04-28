@@ -1,8 +1,8 @@
 
 function createAsteroids() {
-    const s = 80
+    const s = 80 / 2
     for (var y = 0; y < 4; y++){
-        for (var x = 0; x < 8; x++){
+        for (var x = 0; x < 8 * 2; x++){
             const enemy = new Enemy(game, x * s, y * s, 'asteroid')
             asteroids.add(enemy)
         }
@@ -56,16 +56,25 @@ const state = {
   },
   preload: function() {
     game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT
+
+
     game.load.image('ship', 'img/ship.gif')
+    game.load.image('particle', 'img/particle.png')
     game.load.image('asteroid', 'giphy-2.gif')
+    game.load.image('background', 'background.png')
 
     game.load.spritesheet('kaboom', 'sample.jpg', 64, 64);
 
     var explosions;
     game.load.image('bullet', 'img/bullet.png')
     game.load.image('asteroid', 'giphy-2.gif')
+    game.load.audio('pew1', "pew1.wav");
+    game.load.audio('pew2', "pew2.wav");
+    game.load.audio('boom', "boom.wav");
   },
   create: function() {
+
+    game.add.tileSprite(0, 0, game.width, game.height, 'background'); 
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.enable(true)
