@@ -17,7 +17,7 @@ function gameOver() {
 	explosion.play('kaboom', 10, false, true);
 	explosion.reset(game.world.centerX, game.world.centerY)
 
-	var style = { font: "128px Courier New", fill: "#000", wordWrap: true, align: "center", backgroundColor: "#ffff00" };
+	var style = { font: "128px 'stuff'", fill: "#000", wordWrap: true, align: "center", backgroundColor: "#ffff00" };
 	var text = game.add.text(game.world.centerX, game.world.centerY, "GAME OVER", style);
 	text.anchor.setTo(0.5, 0.5)
 
@@ -26,7 +26,7 @@ function gameOver() {
 
 function gameWin() {
 
-	var style = { font: "128px Courier New", fill: "#FFF", wordWrap: true, align: "center", backgroundColor: "#ffff00" };
+	var style = { font: "128px 'stuff'", fill: "#FFF", wordWrap: true, align: "center", backgroundColor: "#ffff00" };
 	var text = game.add.text(game.world.centerX, game.world.centerY, "A WINNER IS YOU", style);
 	text.anchor.setTo(0.5, 0.5)
 
@@ -147,12 +147,10 @@ const state = {
     currentScore = 0;
 
     game.physics.arcade.collide(ship, asteroids);
-    var text = game.add.text(130, 10, "0");
-    var score = game.add.text(10, 10, "SCORE:");
-    text.addColor("#ff0000", 0); //red
-    score.addColor("#ff0000", 0); //red
 
-    game.myText = text
+    var style = { font: "32px 'stuff'", fill: "#fff", align: "center", backgroundColor: "#ffff00" };
+    var text = game.add.text(10, 10, "0", style);
+    game.myText = text 
 
     createAsteroids()
 
@@ -171,7 +169,9 @@ const state = {
 		const shoot = (cursors.up.isDown || this.spaceKey.isDown)
 
     //text
-    game.myText.text = currentScore;
+    game.myText.text = "SCORE: " + currentScore;
+    var style = { font: "32px 'stuff'", fill: "#fff", wordWrap: true, align: "center", backgroundColor: "#ffff00" };
+    game.myText.setStyle(style)
 
     // controls
     if (cursors.left.isDown) {
