@@ -33,11 +33,12 @@ function updateAsteroids() {
 }
 
 function update_score(){
-    if(asteroids.countLiving() <= currentCountLiving){
+
+    console.log(asteroids.countDead());
+    console.log(asteroids.countLiving());
+
+    if(asteroids.countLiving()){
         currentScore += 1;
-        currentCountLiving -= 1;
-        console.log(currentScore);
-        console.log(currentCountLiving);
     }
 }
 
@@ -110,20 +111,33 @@ const state = {
     game.world.setBounds(0, 0, this.world.width, this.world.height)
 
     // enable physics
+    currentScore = 0;
 
-    game.physics.arcade.collide(ship, asteroids)
+    game.physics.arcade.collide(ship, asteroids);
+    var text = game.add.text(130, 10, "0");
+    var score = game.add.text(10, 10, "SCORE:");
+    text.addColor("#ff0000", 0); //red
+    score.addColor("#ff0000", 0); //red
+
+    game.myText = text
 
     createAsteroids()
 
     // "body" only exists after you enable physics
     ship.body.collideWorldBounds = true
-  },
+
+    //score text 
+
+     },
   update: function() {
-    const cursors = game.input.keyboard.createCursorKeys()
-    const SPEED = 1200
+    const cursors = game.input.keyboard.createCursorKeys();
+    const SPEED = 1200;
 
     // alert(asteroids.countLiving())
 
+
+    //text
+    game.myText.text = currentScore;
 
     // controls
     if (cursors.left.isDown) {
