@@ -1,3 +1,3 @@
 # gif-game
 
-<img src="./gif-game/jared.png" />
+<img src="./jared.png" />
