@@ -2,11 +2,35 @@
 function createAsteroids() {
     const s = 80
     for (var y = 0; y < 4; y++){
-        for (var x = 0; x < 8; x++){
+        for (var x = 0; x < 8 * 2; x++){
             const enemy = new Enemy(game, x * s, y * s, 'asteroid')
             asteroids.add(enemy)
         }
     }
+}
+
+function gameOver() {
+
+	var explosion = explosions.getFirstExists(false);
+	explosion.anchor.setTo(0.5, 0.5)
+	explosion.scale.setTo(16, 16)
+	explosion.play('kaboom', 10, false, true);
+	explosion.reset(game.world.centerX, game.world.centerY)
+
+	var style = { font: "128px Courier New", fill: "#000", wordWrap: true, align: "center", backgroundColor: "#ffff00" };
+	var text = game.add.text(game.world.centerX, game.world.centerY, "GAME OVER", style);
+	text.anchor.setTo(0.5, 0.5)
+
+	game.paused = true
+}
+
+function gameWin() {
+
+	var style = { font: "128px Courier New", fill: "#FFF", wordWrap: true, align: "center", backgroundColor: "#ffff00" };
+	var text = game.add.text(game.world.centerX, game.world.centerY, "A WINNER IS YOU", style);
+	text.anchor.setTo(0.5, 0.5)
+
+	game.paused = true
 }
 
 
@@ -23,9 +47,13 @@ function updateAsteroids() {
       dir = -1
       changed = true
     }
+		if (asteroid.y >= (game.world.height-32)) {
+			gameOver()
+		}
   })
   asteroids.forEach(function(asteroid) {
     asteroid.x += dir * 4
+		asteroid.y += Math.cos(game.time.now / 300.0) * 2
     if (changed) {
       asteroid.y += s
     }
@@ -33,11 +61,12 @@ function updateAsteroids() {
 }
 
 function update_score(){
-    if(asteroids.countLiving() <= currentCountLiving){
+
+    console.log(asteroids.countDead());
+    console.log(asteroids.countLiving());
+
+    if(asteroids.countLiving()){
         currentScore += 1;
-        currentCountLiving -= 1;
-        console.log(currentScore);
-        console.log(currentCountLiving);
     }
 }
 
@@ -55,17 +84,29 @@ const state = {
   init: function() {
   },
   preload: function() {
+
     game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT
+
     game.load.image('ship', 'img/ship.gif')
+    game.load.image('particle', 'img/particle.png')
     game.load.image('asteroid', 'giphy-2.gif')
+    game.load.image('background', 'background.png')
 
     game.load.spritesheet('kaboom', 'sample.jpg', 64, 64);
 
     var explosions;
     game.load.image('bullet', 'img/bullet.png')
     game.load.image('asteroid', 'giphy-2.gif')
+    game.load.audio('pew1', "pew1.wav");
+    game.load.audio('pew2', "pew2.wav");
+    game.load.audio('boom', "boom.wav");
+
+		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
   },
   create: function() {
+
+    game.add.tileSprite(0, 0, game.width, game.height, 'background'); 
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.enable(true)
@@ -101,20 +142,34 @@ const state = {
     game.world.setBounds(0, 0, this.world.width, this.world.height)
 
     // enable physics
+    currentScore = 0;
 
-    game.physics.arcade.collide(ship, asteroids)
+    game.physics.arcade.collide(ship, asteroids);
+    var text = game.add.text(130, 10, "0");
+    var score = game.add.text(10, 10, "SCORE:");
+    text.addColor("#ff0000", 0); //red
+    score.addColor("#ff0000", 0); //red
+
+    game.myText = text
 
     createAsteroids()
 
     // "body" only exists after you enable physics
     ship.body.collideWorldBounds = true
-  },
+
+    //score text 
+
+     },
   update: function() {
-    const cursors = game.input.keyboard.createCursorKeys()
-    const SPEED = 1200
+    const cursors = game.input.keyboard.createCursorKeys();
+    const SPEED = 1200;
 
     // alert(asteroids.countLiving())
 
+		const shoot = (cursors.up.isDown || this.spaceKey.isDown)
+
+    //text
+    game.myText.text = currentScore;
 
     // controls
     if (cursors.left.isDown) {
@@ -123,8 +178,7 @@ const state = {
     if (cursors.right.isDown) {
       game.ship.body.velocity.x = SPEED
     }
-    if (cursors.up.isDown) {
-
+    if (shoot) {
       if (game.time.now > cooldown) {
         // create a new bullet
         const x = game.ship.x
@@ -137,9 +191,15 @@ const state = {
         cooldown = game.time.now + 250
       }
     }
+    if (!shoot) {
+			cooldown = game.time.now - 1
+		}
     // slow down gradually
     game.ship.body.velocity.x /= 2
     updateAsteroids()
+		if ( asteroids.countLiving() <= 0 ) {
+			gameWin()
+		}
   },
   render: function() {
     //bullets.forEach((b) => {
@@ -153,9 +213,13 @@ const state = {
   }
 }
 
+// rescaling doesn't work when you resize the window
+const W = window.innerWidth;
+const H = window.innerHeight;
+
 const game = new Phaser.Game(
-  1200,
-  800,
+  W,
+  H,
   Phaser.AUTO,
   'game',
   state

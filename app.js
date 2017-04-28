@@ -5,6 +5,7 @@ const exphbs = require('express-handlebars');
 var app = express();
 
 app.use('/static', express.static(__dirname + '/public'));
+app.use('/game', express.static(__dirname + '/deploy'));
 
 //VIEWS SETUP
 app.engine('.hbs', exphbs({  
